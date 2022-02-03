@@ -406,16 +406,46 @@ def main():
       inquirer.List('scan',
         message='Choose what to do now',
         choices=[
-          ( f"Scan {F.LIGHTCYAN_EX}specific videos{S.R}", '1' ),
-          ( f"Scan {F.LIGHTCYAN_EX}recent videos{S.R} for a channel", '2' ),
-          ( f"Scan recent comments across your {F.LIGHTBLUE_EX}Entire Channel{S.R}", '3' ),
-          ( f"Scan a specific {F.LIGHTMAGENTA_EX}community post{S.R} (Experimental)", '4' ),
-          ( f"Scan {F.LIGHTMAGENTA_EX}recent community posts{S.R} for a channel (Experimental)", '5' ),
-          ( f"Create your own {F.LIGHTGREEN_EX}config file(s){S.R} to run the program with pre-set settings", '6' ),
-          ( f"Remove comments using a {F.LIGHTRED_EX}pre-existing list{S.R} or log file", '7' ),
-          ( f"Recover deleted comments using log file", '8' ),
-          ( f"Check & Download {F.LIGHTCYAN_EX}Updates{S.R}", '9' ),
-          ( 'Quit', 'q' ),
+          (
+            f"Scan {F.LIGHTCYAN_EX}specific videos{S.R}",
+            'chosenVideos'
+          ),
+          (
+            f"Scan {F.LIGHTCYAN_EX}recent videos{S.R} for a channel",
+            'recentVideos'
+          ),
+          (
+            f"Scan recent comments across your {F.LIGHTBLUE_EX}Entire Channel{S.R}",
+            'entireChannel'
+          ),
+          (
+            f"Scan a specific {F.LIGHTMAGENTA_EX}community post{S.R} (Experimental)",
+            'communityPost'
+          ),
+          (
+            f"Scan {F.LIGHTMAGENTA_EX}recent community posts{S.R} for a channel (Experimental)",
+            'recentCommunityPosts'
+          ),
+          (
+            f"Create your own {F.LIGHTGREEN_EX}config file(s){S.R} to run the program with pre-set settings",
+            'makeConfig'
+          ),
+          (
+            f"Remove comments using a {F.LIGHTRED_EX}pre-existing list{S.R} or log file",
+            'commentList'
+          ),
+          (
+            f"Recover deleted comments using log file",
+            'recoverMode'
+          ),
+          (
+            f"Check & Download {F.LIGHTCYAN_EX}Updates{S.R}",
+            'checkUpdates'
+          ),
+          (
+            'Quit',
+            'q'
+          ),
         ],
       ),
     ]
@@ -424,6 +454,14 @@ def main():
     validMode:bool = False
     validConfigSetting:bool = True
     while validMode == False:
+
+      answers = inquirer.prompt(questions)
+      scanMode = answers['scan']
+      validMode = True
+
+      if scanMode == 'q':
+        sys.exit()
+
       '''
       if validConfigSetting == True and config and config['scan_mode'] != 'ask':
         scanMode = config['scan_mode']
@@ -436,33 +474,25 @@ def main():
       validModeValues = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'chosenvideos', 'recentvideos', 'entirechannel', 'communitypost', 'commentlist', 'recentcommunityposts']
       if scanMode in validModeValues:
         validMode = True
-      '''
 
-      answers = inquirer.prompt(questions)
-      scanMode = answers['scan']
-
-      if scanMode == 'q':
-        sys.exit()
-
-      if scanMode == "1" or scanMode == "chosenvideos":
-        scanMode = "chosenVideos"
-      elif scanMode == "2" or scanMode == "recentvideos":
-        scanMode = "recentVideos"
-      elif scanMode == "3" or scanMode == "entirechannel":
-        scanMode = "entireChannel"
-      elif scanMode == "4" or scanMode == "communitypost":
-        scanMode = "communityPost"
-      elif scanMode == "5" or scanMode == "recentcommunityposts":
-        scanMode = "recentCommunityPosts"
-      elif scanMode == "6":
-        scanMode = "makeConfig"
-      elif scanMode == "7" or scanMode == "commentlist":
-        scanMode = "commentList"          
-      elif scanMode == "8":
-        scanMode = "recoverMode"
-      elif scanMode == "9":
-        scanMode = "checkUpdates"
-      '''
+        if scanMode == "1" or scanMode == "chosenvideos":
+          scanMode = "chosenVideos"
+        elif scanMode == "2" or scanMode == "recentvideos":
+          scanMode = "recentVideos"
+        elif scanMode == "3" or scanMode == "entirechannel":
+          scanMode = "entireChannel"
+        elif scanMode == "4" or scanMode == "communitypost":
+          scanMode = "communityPost"
+        elif scanMode == "5" or scanMode == "recentcommunityposts":
+          scanMode = "recentCommunityPosts"
+        elif scanMode == "6":
+          scanMode = "makeConfig"
+        elif scanMode == "7" or scanMode == "commentlist":
+          scanMode = "commentList"          
+        elif scanMode == "8":
+          scanMode = "recoverMode"
+        elif scanMode == "9":
+          scanMode = "checkUpdates"
       else:
         print(f"\nInvalid choice: {scanMode} - Enter a number from 1 to 9")
         validConfigSetting = False
