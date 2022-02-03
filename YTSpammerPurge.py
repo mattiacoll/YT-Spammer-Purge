@@ -52,6 +52,7 @@ import Scripts.prepare_modes as modes
 from Scripts.community_downloader import main as get_community_comments #Args = post's ID, comment limit
 import Scripts.community_downloader as community_downloader
 from Scripts.utils import choice
+import inquirer
 
 # Standard Libraries
 import time
@@ -290,8 +291,20 @@ def main():
     userInfo = auth.get_current_user(config)
     CURRENTUSER = User(id=userInfo[0], name=userInfo[1], configMatch=userInfo[2]) # Returns [channelID, channelTitle, configmatch]
     auth.CURRENTUSER = CURRENTUSER
-    print("\n    >  Currently logged in user: " + f"{F.LIGHTGREEN_EX}" + str(CURRENTUSER.name) + f"{S.R} (Channel ID: {F.LIGHTGREEN_EX}" + str(CURRENTUSER.id) + f"{S.R} )")
-    if choice("       Continue as this user?", CURRENTUSER.configMatch) == True:
+    print("\n\nCurrently logged in user: " + f"{F.LIGHTGREEN_EX}" + str(CURRENTUSER.name) + f"{S.R} (Channel ID: {F.LIGHTGREEN_EX}" + str(CURRENTUSER.id) + f"{S.R} )\n")
+
+    questions = [
+      inquirer.List('user',
+        message="Continue as this user?",
+        choices=[
+          'yes', 'no'
+        ],
+      ),
+    ]
+
+    answers = inquirer.prompt(questions)
+
+    if answers['user'] == 'yes':
       confirmedCorrectLogin = True
       os.system(clear_command)
     else:
@@ -372,6 +385,7 @@ def main():
         updateString = ""
 
     # User selects scanning mode,  while Loop to get scanning mode, so if invalid input, it will keep asking until valid input
+    '''
     print("\n{:<59}{:<18}{:>5}".format("> At any prompt, enter 'X' to return here", updateStringLabel, updateString))
     print("> Enter 'Q' now to quit")
 
@@ -386,13 +400,31 @@ def main():
     print(f"      7. Remove comments using a {F.LIGHTRED_EX}pre-existing list{S.R} or log file")
     print(f"      8. Recover deleted comments using log file")
     print(f"      9. Check & Download {F.LIGHTCYAN_EX}Updates{S.R}\n")
-    
+    '''
 
+    questions = [
+      inquirer.List('scan',
+        message="Choose what to do now",
+        choices=[
+          ( f"Scan {F.LIGHTCYAN_EX}specific videos{S.R}", '1' ),
+          ( f"Scan {F.LIGHTCYAN_EX}recent videos{S.R} for a channel", '2' ),
+          ( f"Scan recent comments across your {F.LIGHTBLUE_EX}Entire Channel{S.R}", '3' ),
+          ( f"Scan a specific {F.LIGHTMAGENTA_EX}community post{S.R} (Experimental)", '4' ),
+          ( f"Scan {F.LIGHTMAGENTA_EX}recent community posts{S.R} for a channel (Experimental)", '5' ),
+          ( f"Create your own {F.LIGHTGREEN_EX}config file(s){S.R} to run the program with pre-set settings", '6' ),
+          ( f"Remove comments using a {F.LIGHTRED_EX}pre-existing list{S.R} or log file", '7' ),
+          ( f"Recover deleted comments using log file", '8' ),
+          ( f"Check & Download {F.LIGHTCYAN_EX}Updates{S.R}", '9' ),
+          ( 'Quit', 'q' ),
+        ],
+      ),
+    ]
 
     # Make sure input is valid, if not ask again
     validMode:bool = False
     validConfigSetting:bool = True
     while validMode == False:
+      '''
       if validConfigSetting == True and config and config['scan_mode'] != 'ask':
         scanMode = config['scan_mode']
       else:
@@ -404,27 +436,37 @@ def main():
       validModeValues = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'chosenvideos', 'recentvideos', 'entirechannel', 'communitypost', 'commentlist', 'recentcommunityposts']
       if scanMode in validModeValues:
         validMode = True
-        if scanMode == "1" or scanMode == "chosenvideos":
-          scanMode = "chosenVideos"
-        elif scanMode == "2" or scanMode == "recentvideos":
-          scanMode = "recentVideos"
-        elif scanMode == "3" or scanMode == "entirechannel":
-          scanMode = "entireChannel"
-        elif scanMode == "4" or scanMode == "communitypost":
-          scanMode = "communityPost"
-        elif scanMode == "5" or scanMode == "recentcommunityposts":
-          scanMode = "recentCommunityPosts"
-        elif scanMode == "6":
-          scanMode = "makeConfig"
-        elif scanMode == "7" or scanMode == "commentlist":
-          scanMode = "commentList"          
-        elif scanMode == "8":
-          scanMode = "recoverMode"
-        elif scanMode == "9":
-          scanMode = "checkUpdates"
+      '''
+
+      answers = inquirer.prompt(questions)
+      scanMode = answers['scan']
+
+      if scanMode == 'q':
+        sys.exit()
+
+      if scanMode == "1" or scanMode == "chosenvideos":
+        scanMode = "chosenVideos"
+      elif scanMode == "2" or scanMode == "recentvideos":
+        scanMode = "recentVideos"
+      elif scanMode == "3" or scanMode == "entirechannel":
+        scanMode = "entireChannel"
+      elif scanMode == "4" or scanMode == "communitypost":
+        scanMode = "communityPost"
+      elif scanMode == "5" or scanMode == "recentcommunityposts":
+        scanMode = "recentCommunityPosts"
+      elif scanMode == "6":
+        scanMode = "makeConfig"
+      elif scanMode == "7" or scanMode == "commentlist":
+        scanMode = "commentList"          
+      elif scanMode == "8":
+        scanMode = "recoverMode"
+      elif scanMode == "9":
+        scanMode = "checkUpdates"
+      '''
       else:
         print(f"\nInvalid choice: {scanMode} - Enter a number from 1 to 9")
         validConfigSetting = False
+      '''
 
     # If chooses to scan single video - Validate Video ID, get title, and confirm with user
     if scanMode == "chosenVideos":  
