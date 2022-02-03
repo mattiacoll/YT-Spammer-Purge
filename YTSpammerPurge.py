@@ -293,18 +293,8 @@ def main():
     auth.CURRENTUSER = CURRENTUSER
     print("\n\nCurrently logged in user: " + f"{F.LIGHTGREEN_EX}" + str(CURRENTUSER.name) + f"{S.R} (Channel ID: {F.LIGHTGREEN_EX}" + str(CURRENTUSER.id) + f"{S.R} )\n")
 
-    questions = [
-      inquirer.List('user',
-        message='Continue as this user?',
-        choices=[
-          'yes', 'no'
-        ],
-      ),
-    ]
-
-    answers = inquirer.prompt(questions)
-
-    if answers['user'] == 'yes':
+    print("\n    >  Currently logged in user: " + f"{F.LIGHTGREEN_EX}" + str(CURRENTUSER.name) + f"{S.R} (Channel ID: {F.LIGHTGREEN_EX}" + str(CURRENTUSER.id) + f"{S.R} )")
+    if choice("       Continue as this user?", CURRENTUSER.configMatch) == True:
       confirmedCorrectLogin = True
       os.system(clear_command)
     else:
