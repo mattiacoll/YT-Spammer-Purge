@@ -295,7 +295,7 @@ def main():
 
     questions = [
       inquirer.List('user',
-        message="Continue as this user?",
+        message='Continue as this user?',
         choices=[
           'yes', 'no'
         ],
@@ -404,7 +404,7 @@ def main():
 
     questions = [
       inquirer.List('scan',
-        message="Choose what to do now",
+        message='Choose what to do now',
         choices=[
           ( f"Scan {F.LIGHTCYAN_EX}specific videos{S.R}", '1' ),
           ( f"Scan {F.LIGHTCYAN_EX}recent videos{S.R} for a channel", '2' ),
